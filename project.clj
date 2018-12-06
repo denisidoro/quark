@@ -1,18 +1,21 @@
-(defproject denisidoro/quark "0.0.0"
+(defproject denisidoro/quark "0.1.0"
 
   :description "Clojure(Script) utility belt"
   :url "https://github.com/denisidoro/quark"
 
   :license {:name "Eclipse Public License"
             :url  "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies []
+
+  :dependencies [[cheshire "5.8.1"]]
 
   :plugins [[lein-cloverage "1.0.13"]
             [lein-shell "0.5.0"]
             [lein-ancient "0.6.15"]
             [lein-changelog "0.3.2"]]
 
-  :profiles {:dev {:dependencies [[org.clojure/clojure "1.9.0"]]}}
+  :profiles {:dev {:dependencies [[org.clojure/clojure "1.9.0"]
+                                  [midje "1.9.4" :exclusions [org.clojure/clojure]]]
+                   :plugins      [[lein-midje "3.2.1"]]}}
 
   :deploy-repositories [["releases" :clojars]]
 
@@ -26,4 +29,6 @@
                   ["vcs" "commit"]
                   ["vcs" "tag"]
                   ["deploy"]
-                  ["vcs" "push"]])
+                  ["vcs" "push"]]
+
+  :test-paths ["test/"])
