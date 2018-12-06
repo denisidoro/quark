@@ -62,6 +62,19 @@
 (defn dissoc-in-if [m ks pred]
   (cond-> m (pred (get-in m ks)) (dissoc-in ks)))
 
+(defn single-result! [coll]
+  (let [c (count coll)]
+    (cond
+      (= c 1) (first coll)
+      (zero? c) (throw (ex-info "Invalid Input"
+                                {:type    :invalid-input
+                                 :details {:reason "Empty collection"
+                                           :count  c}}))
+      :else (throw (ex-info "Invalid Input"
+                            {:type    :invalid-input
+                             :details {:reason (str "Collection has " c " elements")
+                                       :count  c}})))))
+
 (defn index-by [f coll]
   "Returns a map with elements indexed by an index function. Throws exception if value is not unique for index."
   (->> coll
@@ -237,16 +250,3 @@
   (if (map? m)
     (recur ((-> m keys first) m))
     m))
-
-(defn single-result! [coll]
-  (let [c (count coll)]
-    (cond
-      (= c 1) (first coll)
-      (zero? c) (throw (ex-info "Invalid Input"
-                                {:type    :invalid-input
-                                 :details {:reason "Empty collection"
-                                           :count  c}}))
-      :else (throw (ex-info "Invalid Input"
-                            {:type    :invalid-input
-                             :details {:reason (str "Collection has " c " elements")
-                                       :count  c}})))))
