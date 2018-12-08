@@ -1,6 +1,19 @@
 (ns quark.lang.collection-test
   (:require [midje.sweet :refer :all]
+  [clojure.test :as t]
             [quark.lang.collection :as coll]))
+
+(t/is (= 4 2) "xablau")
+
+(defmacro fact2
+  [doc actual _ expected]
+  (let [function? (fn? expected)
+        expected' (if function? true expected)
+        actual'   (if function? (-> actual expected boolean) actual)]
+    `(t/is (= ~actual' ~expected') ~doc)))
+
+(fact2 "xablau"
+  4 => even?)
 
 (defn ^:private same?
   [expected]
