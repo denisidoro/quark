@@ -1,5 +1,4 @@
-(ns quark.math.core
-  (:require [quark.spec.schema :as s]))
+(ns quark.math.core)
 
 (defn pow
   [x n]
@@ -14,20 +13,18 @@
    (defn ^:private to-str [^Integer n ^Integer to-base] (.toString n to-base))
    :cljs (defn ^:private to-str [n to-base] (.toString n to-base)))
 
-(s/defn from-radix :- s/Num
-  [value radix :- s/Int]
+(defn from-radix
+  [value radix]
   #?(:cljs (js/parseInt value radix)
      :clj (BigInteger. value radix)))
 
-(s/defn to-radix
-  :-
-  s/Str
-  ([value to-base :- s/Int]
+(defn to-radix
+  ([value to-base]
    (-> value
        str
        (from-radix 10)
        (to-str to-base)))
-  ([value from-base :- s/Int to-base :- s/Int]
+  ([value from-base to-base]
    (-> value
        (from-radix from-base)
        (to-radix to-base))))
