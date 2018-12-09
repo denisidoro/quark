@@ -22,9 +22,13 @@ jobs:
           keys:
           - v1-dependencies-{{ checksum "deps.edn" }}
 
-      - run: clojure -R:cljtest -e "(println \"Clojure setup done\")"
+      - run:
+          name: Clojure setup
+          command: clojure -R:cljtest -e "(println \"Clojure setup done\")"
 
-      - run: clojure -R:cljstest -e "(println \"Clojurescript setup done\")"
+      - run:
+          name: Clojurescript setup
+          command: clojure -R:cljstest -e "(println \"Clojurescript setup done\")"
 
       - save_cache:
           paths:
