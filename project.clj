@@ -1,4 +1,4 @@
-(defproject denisidoro/quark "0.1.0"
+(defproject denisidoro/quark "0.2.0"
 
   :description "Clojure(Script) utility belt"
   :url "https://github.com/denisidoro/quark"
@@ -19,7 +19,8 @@
 
   :deploy-repositories [["releases" :clojars]]
 
-  :aliases {"update-readme-version" ["shell" "sed" "-i" "s/\\\\[denisidoro\\\\/quark \"[0-9.]*\"\\\\]/[denisidoro\\\\/quark \"${:version}\"]/" "README.md"]}
+  :aliases {"update-readme-version" ["shell" "sed" "-i" "s/\\\\[denisidoro\\\\/quark \"[0-9.]*\"\\\\]/[denisidoro\\\\/quark \"${:version}\"]/" "README.md"]
+  "test2" ["shell" "bash" "./scripts/test"]}
 
   :release-tasks [["shell" "git" "diff" "--exit-code"]
                   ["change" "version" "leiningen.release/bump-version"]
