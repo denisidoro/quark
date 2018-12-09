@@ -10,3 +10,5 @@ pom.xml.asc
 /.idea
 /*.iml
 /src/quark/error
+/cljs-test-runner-out
+/.cpcache

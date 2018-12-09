@@ -1,0 +1,11 @@
+{:deps
+ {org.clojure/clojure       {:mvn/version "1.9.0"}
+  org.clojure/clojurescript {:mvn/version "1.10.145"}}
+
+ :paths ["src"]
+
+ :aliases
+ {:test
+  {:extra-paths ["test"]
+   :extra-deps  {olical/cljs-test-runner   {:mvn/version "3.1.0"}}
+   :main-opts   ["-m" "cljs-test-runner.main"]}}}

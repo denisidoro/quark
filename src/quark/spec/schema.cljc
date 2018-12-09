@@ -1,6 +1,7 @@
 (ns quark.spec.schema
-  (:refer-clojure :exclude [defn])
+  (:refer-clojure :exclude [defn Keyword])
   (:require [quark.spec.impl :as impl]
+            [clojure.core :as core]
             #?@(:clj  [[clojure.spec.alpha :as s]]
                 :cljs [[cljs.spec.alpha :as s]])))
 
@@ -33,6 +34,6 @@
   [& schemas]
   `(s/and ~@schemas))
 
-(defn protocol
+(core/defn protocol
   [p]
   #(satisfies? p %))
