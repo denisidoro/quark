@@ -1,21 +1,22 @@
 # quark
-[![Build Status](https://travis-ci.org/denisidoro/quark.svg?branch=master)](https://travis-ci.org/denisidoro/quark)
-[![codecov](https://codecov.io/gh/denisidoro/quark/branch/master/graph/badge.svg)](https://codecov.io/gh/denisidoro/quark)
+[![Build Status](https://circleci.com/gh/denisidoro/quark.svg?style=svg)](https://circleci.com/gh/denisidoro/quark)
 [![Clojars Project](https://img.shields.io/clojars/v/denisidoro/quark.svg)](https://clojars.org/denisidoro/quark)
 
-A Clojure library designed to ... well, that part is up to you.
+![Icon](https://user-images.githubusercontent.com/3226564/49697760-64d8be80-fba2-11e8-93de-db9ee4544bbc.png)
 
-```clj
-[denisidoro/quark "0.0.0"]
-```
+`quark` is an all-purpose Clojure(Script) library similar to:
 
-## Usage
+- [alexandergunnarson/quantum](https://github.com/alexandergunnarson/quantum/blob/master/README.md)
+- [Prismatic/plumbing](https://github.com/Prismatic/plumbing)
+- [weavejester/medley](https://github.com/weavejester/medley)
+- [mikera/clojure-utils](https://github.com/mikera/clojure-utils)
+- [ptaoussanis/encore](https://github.com/ptaoussanis/encore)
+- [ztellman/potemkin](https://github.com/ztellman/potemkin)
+- [zcaudate/hara](https://github.com/zcaudate/hara)
 
-FIXME
+A quark is a type of elementary particle and a fundamental constituent of matter. 
 
-## License
+### Credits
 
-Copyright © 2018 FIXME
+Icon made by [Freepik](https://www.freepik.com/) from [flaticon](www.flaticon.com)
 
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
