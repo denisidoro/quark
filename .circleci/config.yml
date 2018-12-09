@@ -30,3 +30,4 @@ jobs:
           key: v1-dependencies-{{ checksum "deps.edn" }}
 
       - run: clojure -A:test
+      
