@@ -27,7 +27,7 @@
 ;; CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ;; SOFTWARE.
 
-(ns quark.graph.core
+(ns quark.graph.normalization
   "An in-memory graph data store consisting of maps with links.
 
   ## Introduction

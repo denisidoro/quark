@@ -2,7 +2,7 @@
   (:require [quark.lang.string :as string]
             #?@(:clj  [[cheshire.core :as json]
                        [clojure.edn :as edn]]
-                :cljs [[cljs.reader :as reader]])))
+                :cljs [[cljs.tools.reader :as reader]])))
 
 (def readers {})
 

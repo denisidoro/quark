@@ -1,7 +1,6 @@
 (ns quark.lang.collection-test
-  (:require [#?(:clj  clojure.test
-                :cljs cljs.test) :as t]))
+  (:require [#?(:clj clojure.test :cljs cljs.test) :as t]
+            [quark.aux.run :as r]))
 
-#_(t/deftest should-run
-  (t/testing "this should run"
-    (t/is (= 1 3))))
+(t/deftest should-run
+  (t/is (= 1 3)))
