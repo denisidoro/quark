@@ -5,6 +5,12 @@
 
 (s/def ::local-name (s/and simple-symbol? #(not= '& %)))
 
+(def spec-delimiter? #{:-})
+
+(s/def ::del+spec
+  (s/cat :delimiter spec-delimiter?
+         :spec any?))
+
 (s/def ::binding-form
   (s/or :sym ::local-name
         :seq ::seq-binding-form
@@ -43,17 +49,17 @@
 
 (s/def ::map-binding-form (s/merge ::map-bindings ::map-special-binding))
 
-(s/def ::spec (s/and some? #(not (string? %)))) ; TODO: Spec for specs
+(s/def ::spec (s/and some? #(not (string? %))))             ; TODO: Spec for specs
 (s/def ::args (s/and vector?
                      (s/cat :args (s/* (s/cat :binding ::binding-form
-                                              :spec ::spec))
+                                              :spec (s/? ::del+spec)))
                             :varargs (s/? (s/cat :amp #{'&}
                                                  :form ::binding-form
-                                                 :spec ::spec)))))
+                                                 :spec ::del+spec)))))
 (s/def ::arity (s/cat :args ::args
                       :body (s/* any?)))
 (s/def ::defn-spec-args (s/cat :name simple-symbol?
-                               :ret ::spec
+                               :ret (s/? ::del+spec)
                                :docstring (s/? string?)
                                :meta (s/? map?)
                                :arities (s/alt :single ::arity
@@ -91,8 +97,8 @@
   "Strips the specs from the arity's args and gets it ready for consumption.
    Does the job of s/unform, since s/unform doesn't do its job well."
   [arity]
-  (let [args (get-in arity [:args :args])
-        rendered-args (mapv (comp render-binding :binding) args)
+  (let [args             (get-in arity [:args :args])
+        rendered-args    (mapv (comp render-binding :binding) args)
         rendered-varargs (if-some [varargs (get-in arity [:args :varargs])]
                            ['& (render-binding (:form varargs))]
                            [])]
@@ -107,14 +113,14 @@
 (defn extract-arg-specs
   "Returns a sequence of specs, based on the arity's args."
   [arity]
-  (let [args (get-in arity [:args :args])
-        varargs (get-in arity [:args :varargs])
-        arg-specs (mapv (fn [{:keys [spec]}]
-                          ; We automatically wrap non-vararg specs in (s/spec).
-                          ; This ensure no regex specs flatten to apply to the
-                          ; fdef's outer :args s/cat.
-                          (list (spec-fn ::spec) spec))
-                        args)
+  (let [args        (get-in arity [:args :args])
+        varargs     (get-in arity [:args :varargs])
+        arg-specs   (mapv (fn [{:keys [spec]}]
+                            ; We automatically wrap non-vararg specs in (s/spec).
+                            ; This ensure no regex specs flatten to apply to the
+                            ; fdef's outer :args s/cat.
+                            (list (spec-fn ::spec) spec))
+                          args)
         arity-specs (if-some [varargs (get-in arity [:args :varargs])]
                       (conj arg-specs (:spec varargs))
                       arg-specs)]
@@ -138,14 +144,14 @@
 
 (defn build-args-spec
   [conformed-arities exploded-arities]
-  (let [arg-specs (->> (mapv extract-arg-specs conformed-arities)
-                       (sort-by count)) ; Sort for consistency
-        arg-names (->> (map (fn [arity]
-                              (map-indexed arg->kw (::exploded-args arity)))
-                            exploded-arities)
-                       (sort-by count)) ; Sort for consistency
+  (let [arg-specs  (->> (mapv extract-arg-specs conformed-arities)
+                        (sort-by count))                    ; Sort for consistency
+        arg-names  (->> (map (fn [arity]
+                               (map-indexed arg->kw (::exploded-args arity)))
+                             exploded-arities)
+                        (sort-by count))                    ; Sort for consistency
         arg-counts (mapv count arg-specs)
-        cats (mapv build-cat arg-names arg-specs)
+        cats       (mapv build-cat arg-names arg-specs)
         named-cats (mapcat vector (mapv name-arity arg-counts) cats)]
     ; To keep specs as simple as possible, we avoid the s/or when there's only
     ; a single arity. This is the typical case, so it's worth prefering
@@ -153,29 +159,46 @@
       (first cats)
       (cons (spec-fn ::or) named-cats))))
 
+(defn del+spec->spec
+  [{:keys [spec]}]
+  (or spec 'any?))
+
+(defn fix-arity
+  [x]
+  (update x :spec del+spec->spec))
+
+(defn fix-arities
+  [arities]
+  (if (-> arities first (= :single))
+    (update-in arities [1 :args :args] (fn [x] (mapv #(update % :spec del+spec->spec) x)))
+    (update-in arities [1] (fn [x] (mapv (fn [y] (update-in y [:args :args] (fn [a] (mapv fix-arity a)))) x)))))
+
 (defn explode-def
   "Takes in the variadic values of a defn-spec and returns a map of the
    various parts. Handles multiple arities and optional doc strings."
   [& args]
-  (let [conformed (->> (s/assert ::defn-spec-args args)
-                       (s/conform ::defn-spec-args))
+  (let [conformed         (->> (s/assert ::defn-spec-args args)
+                               (s/conform ::defn-spec-args))
+        conformed         (-> conformed
+                              (update :ret del+spec->spec)
+                              (update :arities fix-arities))
         ; Single arity fns don't require surrounding parens. Conform them to
         ; look like multiple arities before continuing.
         conformed-arities (if (= :single (-> conformed :arities first))
                             [(-> conformed :arities second)]
                             (-> conformed :arities second))
-        exploded-arities (mapv explode-arity conformed-arities)
-        args-spec (build-args-spec conformed-arities exploded-arities)]
-    {::name (:name conformed)
-     ::doc (:docstring conformed)
-     ::arities (map render-arity exploded-arities)
+        exploded-arities  (mapv explode-arity conformed-arities)
+        args-spec         (build-args-spec conformed-arities exploded-arities)]
+    {::name     (:name conformed)
+     ::doc      (:docstring conformed)
+     ::arities  (map render-arity exploded-arities)
      ::spec-map (merge (select-keys (:meta conformed) [:fn])
                        (select-keys conformed [:ret])
                        {:args args-spec})}))
 
 (defn defn-spec-helper [& args]
-  (let [s-fdef (spec-fn ::fdef)
-        exploded (apply explode-def args)
+  (let [s-fdef        (spec-fn ::fdef)
+        exploded      (apply explode-def args)
         stripped-meta (dissoc (:meta exploded) :fn)]
     `(do
        (defn ~(::name exploded)
