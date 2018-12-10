@@ -114,7 +114,6 @@
   "Returns a sequence of specs, based on the arity's args."
   [arity]
   (let [args        (get-in arity [:args :args])
-        varargs     (get-in arity [:args :varargs])
         arg-specs   (mapv (fn [{:keys [spec]}]
                             ; We automatically wrap non-vararg specs in (s/spec).
                             ; This ensure no regex specs flatten to apply to the
@@ -173,15 +172,19 @@
     (update-in arities [1 :args :args] (fn [x] (mapv #(update % :spec del+spec->spec) x)))
     (update-in arities [1] (fn [x] (mapv (fn [y] (update-in y [:args :args] (fn [a] (mapv fix-arity a)))) x)))))
 
+(defn adapt-conformed
+  [conformed]
+  (-> conformed
+      (update :ret del+spec->spec)
+      (update :arities fix-arities)))
+
 (defn explode-def
   "Takes in the variadic values of a defn-spec and returns a map of the
    various parts. Handles multiple arities and optional doc strings."
   [& args]
   (let [conformed         (->> (s/assert ::defn-spec-args args)
-                               (s/conform ::defn-spec-args))
-        conformed         (-> conformed
-                              (update :ret del+spec->spec)
-                              (update :arities fix-arities))
+                               (s/conform ::defn-spec-args)
+                               adapt-conformed)
         ; Single arity fns don't require surrounding parens. Conform them to
         ; look like multiple arities before continuing.
         conformed-arities (if (= :single (-> conformed :arities first))
