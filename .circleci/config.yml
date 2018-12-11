@@ -22,8 +22,6 @@ jobs:
       - restore_cache:
           keys:
           - v1-dependencies-{{ checksum "deps.edn" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
       - run:
           name: Clojure setup
           command: clojure -R:cljtest -e "(println \"Clojure setup done\")"
