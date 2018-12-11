@@ -3,42 +3,64 @@
 # Check https://circleci.com/docs/2.0/language-clojure/ for more details
 #
 version: 2
-jobs:
-  build:
+
+job_defaults: &defaults
     docker:
       - image: circleci/clojure:tools-deps-node
-
     working_directory: ~/repo
-
     environment:
       LEIN_ROOT: "true"
-      JVM_OPTS: -Xmx3200m
+      JVM_OPTS: -Xmx3200m      
+      ENVIRONMENT: "test"
 
+jobs:
+  build:
+    <<: *defaults
+    # Download and cache dependencies
     steps:
       - checkout
-
-      # Download and cache dependencies
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "deps.edn" }}
-
+          - v1-dependencies-{{ checksum "project.clj" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
       - run:
           name: Clojure setup
           command: clojure -R:cljtest -e "(println \"Clojure setup done\")"
-
       - run:
           name: Clojurescript setup
           command: clojure -R:cljstest -e "(println \"Clojurescript setup done\")"
-
       - save_cache:
           paths:
             - ~/.m2
-          key: v1-dependencies-{{ checksum "deps.edn" }}
+          key: v1-dependencies-{{ checksum "project.clj" }}
 
-      - run:
-          name: Clojure tests
-          command: clojure -A:cljtest
+  test-clj:
+    <<: *defaults
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "project.clj" }}
+      - run: clojure -A:cljtest
 
-      - run:
-          name: Clojurescript tests
-          command: clojure -A:cljstest
+  test-cljs:
+    <<: *defaults
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "project.clj" }}
+      - run: clojure -A:cljstest
+
+workflows:
+  version: 2
+  build-and-test:
+    jobs:
+      - build
+      - test-clj:
+          requires:
+            - build
+      - test-cljs:
+          requires:
+            - build
