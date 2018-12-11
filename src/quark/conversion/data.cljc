@@ -2,7 +2,7 @@
   (:require [quark.lang.string :as string]
             #?@(:clj  [[cheshire.core :as json]
                        [clojure.edn :as edn]]
-                :cljs [[cljs.reader :as reader]])))
+                :cljs [[cljs.tools.reader :as reader]])))
 
 (def readers {})
 
@@ -42,3 +42,8 @@
        :clj  (-> json
                  string/underscore->dash
                  (json/parse-string true)))))
+
+(defn str->int
+  [x]
+  #?(:clj  (-> x bigint int)
+     :cljs (js/parseInt x)))

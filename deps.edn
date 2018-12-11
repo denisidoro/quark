@@ -1,6 +1,7 @@
 {:deps
  {org.clojure/clojure       {:mvn/version "1.9.0"}
-  org.clojure/clojurescript {:mvn/version "1.10.145"}}
+  org.clojure/clojurescript {:mvn/version "1.10.145"}
+  cheshire                  {:mvn/version "5.8.1"}}
 
  :paths
  ["src"]
@@ -13,7 +14,6 @@
 
   :cljtest
   {:extra-paths ["test"]
-   :extra-deps
-                {com.cognitect/test-runner {:git/url "https://github.com/cognitect-labs/test-runner.git"
-                                            :sha    "76568540e7f40268ad2b646110f237a60295fa3c"}}
+   :extra-deps  {com.cognitect/test-runner {:git/url "https://github.com/cognitect-labs/test-runner.git"
+                                            :sha     "76568540e7f40268ad2b646110f237a60295fa3c"}}
    :main-opts   ["-m" "cognitect.test-runner"]}}}
