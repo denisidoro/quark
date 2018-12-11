@@ -42,7 +42,9 @@ jobs:
       - restore_cache:
           keys:
           - v1-dependencies-{{ checksum "deps.edn" }}
-      - run: clojure -A:cljtest
+      - run: 
+          name: Run tests
+          command: clojure -A:cljtest
 
   test-cljs:
     <<: *defaults
@@ -51,7 +53,9 @@ jobs:
       - restore_cache:
           keys:
           - v1-dependencies-{{ checksum "deps.edn" }}
-      - run: clojure -A:cljstest
+      - run: 
+          name: Run tests
+          command: clojure -A:cljstest
 
 workflows:
   version: 2
