@@ -42,3 +42,8 @@
        :clj  (-> json
                  string/underscore->dash
                  (json/parse-string true)))))
+
+(defn str->int
+  [x]
+  #?(:clj  (-> x bigint int)
+     :cljs (js/parseInt x)))

@@ -1,6 +1,6 @@
 (ns quark.conversion.data-test
-  #_(:require [#?(:clj clojure.test :cljs cljs.test) :as t]
+  (:require [#?(:clj clojure.test :cljs cljs.test) :as t]
             [quark.conversion.data :as n]))
 
-#_(t/deftest should-run
+(t/deftest edn-str->edn
   (t/is (= (n/edn-str->edn "{:a 42}") {:a 42})))

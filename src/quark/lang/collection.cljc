@@ -16,6 +16,12 @@
         will-have-in-the-end (min c i)]
     (drop (- c will-have-in-the-end) seq)))
 
+(defn throw-exception
+  [^String message]
+  (throw (#?(:clj IllegalArgumentException.
+             :cljs js/Error.)
+           message)))
+
 (defn assoc-if
   "Assoc[iate] only truthy values."
   ([m k v]
@@ -25,8 +31,7 @@
      (if kvs
        (if (next kvs)
          (recur ret (first kvs) (second kvs) (nnext kvs))
-         (throw (IllegalArgumentException.
-                  "assoc-if expects even number of arguments after map/vector, found odd number")))
+         (throw-exception "assoc-if expects even number of arguments after map/vector, found odd number"))
        ret))))
 
 (defn assoc-some
@@ -38,8 +43,7 @@
      (if kvs
        (if (next kvs)
          (recur ret (first kvs) (second kvs) (nnext kvs))
-         (throw (IllegalArgumentException.
-                  "assoc-some expects even number of arguments after map/vector, found odd number")))
+         (throw-exception "assoc-some expects even number of arguments after map/vector, found odd number"))
        ret))))
 
 (defn assoc-in-if [m ks v]

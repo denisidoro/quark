@@ -7,8 +7,5 @@
   [a b :- string?]
   (+ a b))
 
-(t/is (= 4 (foo 1 3)))
-
-(t/deftest should-run
-  (t/testing "this should run"
-    (t/is (= 4 3))))
+(t/deftest defn
+  (t/is (= 4 (foo 1 3))))

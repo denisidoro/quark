@@ -6,16 +6,17 @@
   :license {:name "Eclipse Public License"
             :url  "http://www.eclipse.org/legal/epl-v10.html"}
 
-  :dependencies [[cheshire "5.8.1"]]
-
   :plugins [[lein-cloverage "1.0.13"]
             [lein-shell "0.5.0"]
-            [lein-ancient "0.6.15"]
-            [lein-changelog "0.3.2"]]
+            ;[lein-ancient "0.6.15"]
+            [lein-changelog "0.3.2"]
+            [lein-tools-deps "0.4.1"]]
 
-  :profiles {:dev {:dependencies [[org.clojure/clojure "1.9.0"]
-                                  [midje "1.9.4" :exclusions [org.clojure/clojure]]]
-                   :plugins      [[lein-midje "3.2.1"]]}}
+  :profiles {:dev {:dependencies [[org.clojure/clojure "1.9.0"]]}}
+
+  :middleware [lein-tools-deps.plugin/resolve-dependencies-with-deps-edn]
+
+  :lein-tools-deps/config {:config-files [:install :user :project "deps.edn"]}
 
   :deploy-repositories [["releases" :clojars]]
 
