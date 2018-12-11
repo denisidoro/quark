@@ -7,5 +7,5 @@
   [a b :- string?]
   (+ a b))
 
-(t/deftest defn
+(t/deftest def-fn
   (t/is (= 4 (foo 1 3))))

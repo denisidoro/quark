@@ -85,12 +85,6 @@
        (group-by f)
        (map-vals single-result!)))
 
-(defn iopmap [f coll]
-  "Like pmap, but appropriate for blocking IO tasks (e.g. network calls). As opposed to pmap, it's not semi-lazy."
-  (->> coll
-       (mapv #(future (f %)))
-       (mapv deref)))
-
 (defn- contains-in? [m ks]
   (not= ::absent (get-in m ks ::absent)))
 
@@ -172,8 +166,6 @@
     (walk/postwalk (fn [x] (if (map? x) (into {} (map f x)) x)) m)))
 
 (defn indices [f coll] (keep-indexed #(when (f %2) %1) coll))
-
-(defn find-first [pred coll] (first (filter pred coll)))
 
 (defn deep-merge
   "Recursively merges maps.
