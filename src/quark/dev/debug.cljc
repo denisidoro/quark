@@ -4,9 +4,7 @@
 
 (defn tap
   [& args]
-  (println "------------<br>")
   (print args)
-  (println "<br>------------<br>")
   (last args))
 
 (def no-tap
