@@ -20,7 +20,7 @@
   [^String message]
   (throw (#?(:clj  IllegalArgumentException.
              :cljs js/Error.)
-           message)))
+          message)))
 
 (defn assoc-if
   "Assoc[iate] only truthy values."
@@ -120,36 +120,36 @@
   "Returns the x for which (k x), *not necessarily a number*, is greatest, according to `compare`."
   [k coll]
   (reduce
-    (fn [x y]
-      (if (pos? (compare (k x) (k y)))
-        x
-        y))
-    coll))
+   (fn [x y]
+     (if (pos? (compare (k x) (k y)))
+       x
+       y))
+   coll))
 
 (defn min-by
   "Returns the x for which (k x), *not necessarily a number*, is greatest, according to `compare`."
   [k coll]
   (reduce
-    (fn [x y]
-      (if (neg? (compare (k x) (k y)))
-        x
-        y))
-    coll))
+   (fn [x y]
+     (if (neg? (compare (k x) (k y)))
+       x
+       y))
+   coll))
 
 (defn namespaced [m ns]
   (let [ns-str (conversion/any->str ns)]
     (clojure.walk/postwalk
-      (fn [x]
-        (if (simple-keyword? x)
-          (keyword (str ns-str "/" (name x)))
-          x)) m)))
+     (fn [x]
+       (if (simple-keyword? x)
+         (keyword (str ns-str "/" (name x)))
+         x)) m)))
 
 (defn unnamespaced [m]
   (clojure.walk/postwalk
-    (fn [x]
-      (if (keyword? x)
-        (keyword (name x))
-        x)) m))
+   (fn [x]
+     (if (keyword? x)
+       (keyword (name x))
+       x)) m))
 
 (defn in-range? [content from to]
   (<= from (count content) to))

@@ -11,6 +11,7 @@
   :plugins [[lein-cloverage "1.0.13"]
             [lein-shell "0.5.0"]
             ;[lein-ancient "0.6.15"]
+            [lein-cljfmt "0.6.3"]
             [lein-auto "0.1.3"]
             [lein-changelog "0.3.2"]]
 

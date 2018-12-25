@@ -5,7 +5,7 @@
 
 (t/deftest as-map-recursive
   (t/are [input output]
-    (= output (nav/as-map-recursive input))
+         (= output (nav/as-map-recursive input))
     {1 :a 3 :b}                   {1 :a 3 :b}
     {:a {:b [:c :d]}}             {:a {:b {0 :c 1 :d}}}
     {:a {:b #{:c :d}}}            {:a {:b {0 :c 1 :d}}}
@@ -14,7 +14,7 @@
 
 (t/deftest paths
   (t/are [input output]
-    (ch/coll= output (nav/paths input))
+         (ch/coll= output (nav/paths input))
     {:a 1}                  '([:a])
     {:a 1 :b 2}             '([:a] [:b])
     {:a 1 :b {:c :d}}       '([:a] [:b] [:b :c])
@@ -25,7 +25,7 @@
 
 (t/deftest navigate
   (t/are [m path output]
-    (= output (nav/navigate m path))
+         (= output (nav/navigate m path))
     {1 :a 3 :b}                   [1]              :a
     {:a {:b [:c :d]}}             [:a :b 1]        :d
     {:a {:b #{:c :d}}}            [:a :b 1]        :d

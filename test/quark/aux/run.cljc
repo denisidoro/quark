@@ -3,7 +3,7 @@
 
 (defmacro fact
   ([actual comparison expected]
-    `(fact nil ~actual ~comparison ~expected))
+   `(fact nil ~actual ~comparison ~expected))
   ([doc actual comparison expected]
    (if (ifn? expected)
      `(t/is (~expected ~actual) ~doc)

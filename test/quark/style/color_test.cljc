@@ -4,6 +4,6 @@
 
 (t/deftest hex->rgb
   (t/are [input output]
-    (= output (color/hex->rgb input))
+         (= output (color/hex->rgb input))
     "#000000"     [0 0 0]
     "#FFFFFF"     [255 255 255]))

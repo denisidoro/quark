@@ -42,8 +42,8 @@
 
 (s/def ::ns-keys
   (s/tuple
-    (s/and qualified-keyword? #(-> % name #{"keys" "syms"}))
-    (s/coll-of simple-symbol? :kind vector?)))
+   (s/and qualified-keyword? #(-> % name #{"keys" "syms"}))
+   (s/coll-of simple-symbol? :kind vector?)))
 
 (s/def ::map-bindings
   (s/every (s/or :mb ::map-binding
@@ -212,6 +212,6 @@
          ~(or stripped-meta {})
          ~@(::arities exploded))
        (~s-fdef ~(::name exploded)
-         :args ~(-> exploded ::spec-map :args)
-         :fn ~(-> exploded ::spec-map :fn)
-         :ret ~(-> exploded ::spec-map :ret)))))
+                :args ~(-> exploded ::spec-map :args)
+                :fn ~(-> exploded ::spec-map :fn)
+                :ret ~(-> exploded ::spec-map :ret)))))

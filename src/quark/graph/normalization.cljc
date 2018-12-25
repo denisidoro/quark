@@ -108,56 +108,56 @@
   "Returns a sequence of normalized entities starting with map m."
   [m id-attrs]
   (lazy-seq
-    (loop [sub-entities (transient [])
-           normalized   (transient {})
-           kvs          (seq m)]
-      (if-let [[k v] (first kvs)]
-        (if (map? v)
-          (if-let [r (get-ref v id-attrs)]
+   (loop [sub-entities (transient [])
+          normalized   (transient {})
+          kvs          (seq m)]
+     (if-let [[k v] (first kvs)]
+       (if (map? v)
+         (if-let [r (get-ref v id-attrs)]
             ;; v is a single entity
-            (recur (conj! sub-entities v)
-                   (assoc! normalized k r)
-                   (rest kvs))
+           (recur (conj! sub-entities v)
+                  (assoc! normalized k r)
+                  (rest kvs))
             ;; v is a map, not an entity
-            (let [values (vals v)]
-              (if-let [refs (seq (keep #(get-ref % id-attrs) values))]
+           (let [values (vals v)]
+             (if-let [refs (seq (keep #(get-ref % id-attrs) values))]
                 ;; v is a map whose values are entities
-                (do (when-not (= (count refs) (count v))
-                      (throw (ex-info "Map values may not mix entities and non-entities"
-                                      {:reason     ::mixed-map-vals
-                                       ::attribute k
-                                       ::value     v})))
-                    (recur (coll/into! sub-entities values)
-                           (assoc! normalized k (into (empty v) ; preserve type
-                                                      (map vector (keys v) refs)))
-                           (rest kvs)))
+               (do (when-not (= (count refs) (count v))
+                     (throw (ex-info "Map values may not mix entities and non-entities"
+                                     {:reason     ::mixed-map-vals
+                                      ::attribute k
+                                      ::value     v})))
+                   (recur (coll/into! sub-entities values)
+                          (assoc! normalized k (into (empty v) ; preserve type
+                                                     (map vector (keys v) refs)))
+                          (rest kvs)))
                 ;; v is a plain map
-                (recur sub-entities
-                       (assoc! normalized k v)
-                       (rest kvs)))))
+               (recur sub-entities
+                      (assoc! normalized k v)
+                      (rest kvs)))))
           ;; v is not a map
-          (if (coll? v)
-            (if-let [refs (seq (keep #(get-ref % id-attrs) v))]
+         (if (coll? v)
+           (if-let [refs (seq (keep #(get-ref % id-attrs) v))]
               ;; v is a collection of entities
-              (do (when-not (= (count refs) (count v))
-                    (throw (ex-info "Collection values may not mix entities and non-entities"
-                                    {:reason     ::mixed-collection
-                                     ::attribute k
-                                     ::value     v})))
-                  (recur (coll/into! sub-entities v)
-                         (assoc! normalized k (coll/like v refs))
-                         (rest kvs)))
+             (do (when-not (= (count refs) (count v))
+                   (throw (ex-info "Collection values may not mix entities and non-entities"
+                                   {:reason     ::mixed-collection
+                                    ::attribute k
+                                    ::value     v})))
+                 (recur (coll/into! sub-entities v)
+                        (assoc! normalized k (coll/like v refs))
+                        (rest kvs)))
               ;; v is a collection of non-entities
-              (recur sub-entities
-                     (assoc! normalized k v)
-                     (rest kvs)))
+             (recur sub-entities
+                    (assoc! normalized k v)
+                    (rest kvs)))
             ;; v is a single non-entity
-            (recur sub-entities
-                   (assoc! normalized k v)
-                   (rest kvs))))
-        (cons (persistent! normalized)
-              (mapcat #(normalize-entities % id-attrs)
-                      (persistent! sub-entities)))))))
+           (recur sub-entities
+                  (assoc! normalized k v)
+                  (rest kvs))))
+       (cons (persistent! normalized)
+             (mapcat #(normalize-entities % id-attrs)
+                     (persistent! sub-entities)))))))
 
 (defn new-db
   "Returns a new, empty database value."
@@ -182,11 +182,11 @@
   [db & entities]
   (let [id-attrs (::id-attrs db)]
     (persistent!
-      (reduce (fn [db e]
-                (let [ref (get-ref e id-attrs)]
-                  (coll/update! db ref merge e)))
-              (transient db)
-              (mapcat #(normalize-entities % id-attrs) entities)))))
+     (reduce (fn [db e]
+               (let [ref (get-ref e id-attrs)]
+                 (coll/update! db ref merge e)))
+             (transient db)
+             (mapcat #(normalize-entities % id-attrs) entities)))))
 
 (defn entity?
   "Returns true if map is an entity according to the db schema. An
@@ -236,12 +236,12 @@
 (defmethod parse-expr :default
   [{:keys [pattern lookup-ref]} _ expr]
   (throw
-    (ex-info
-      "Invalid form in pull pattern"
-      {:reason      ::invalid-pull-form
-       ::form       expr
-       ::pattern    pattern
-       ::lookup-ref lookup-ref})))
+   (ex-info
+    "Invalid form in pull pattern"
+    {:reason      ::invalid-pull-form
+     ::form       expr
+     ::pattern    pattern
+     ::lookup-ref lookup-ref})))
 
 (defmethod parse-expr ::pattern
   [{:keys [parser db db-get-ref lookup-ref] :as context} result pattern]
@@ -254,13 +254,13 @@
   ;; performance more than just proceeding with the degenerate case and making
   ;; sure we don't return empty colls after the fact.
   (not-empty
-    (let [entity   (db-get-ref context pattern lookup-ref)
+   (let [entity   (db-get-ref context pattern lookup-ref)
           ;; rec joins need a reference to the outer pattern
-          context' (assoc context :entity entity :pattern pattern)]
-      (reduce
-        (fn [result expr]
-          (parser context' result expr))
-        result pattern))))
+         context' (assoc context :entity entity :pattern pattern)]
+     (reduce
+      (fn [result expr]
+        (parser context' result expr))
+      result pattern))))
 
 (defmethod parse-expr ::attr
   [{:keys [entity]} result k]
@@ -276,51 +276,51 @@
             (let [[[k' cnt]] (seq m)]
               (if (= k k') {k (dec ^long cnt)} m)))
           (dec-rec-join-pattern [k pattern]
-            (mapv
-              (fn [expr]
-                (if (map? expr) (dec-rec-pull-map k expr) expr))
-              pattern))
+                                (mapv
+                                 (fn [expr]
+                                   (if (map? expr) (dec-rec-pull-map k expr) expr))
+                                 pattern))
           (rec-join-expr [k join-expr]
             ;; No-op for a simple pattern, recursive exprs will need to get
             ;; their pattern from the context
-            (cond
-              (vector? join-expr) join-expr
-              (= '... join-expr) pattern
-              (and (number? join-expr)
-                   (pos? ^long join-expr))
-              (dec-rec-join-pattern k pattern)
-              :else nil))
+                         (cond
+                           (vector? join-expr) join-expr
+                           (= '... join-expr) pattern
+                           (and (number? join-expr)
+                                (pos? ^long join-expr))
+                           (dec-rec-join-pattern k pattern)
+                           :else nil))
           (parse-one [pull-expr ref]
-            (parser
-              (assoc context :lookup-ref ref)
-              {} pull-expr))
+                     (parser
+                      (assoc context :lookup-ref ref)
+                      {} pull-expr))
           (parse-many [join-expr refs]
-            (coll/keept #(parse-one join-expr %) refs))]
+                      (coll/keept #(parse-one join-expr %) refs))]
     (reduce-kv
-      (fn [result k join-expr]
-        (if-let [val (get entity k)]
-          (if-let [join-expr' (rec-join-expr k join-expr)]
-            (cond
-              (db-ref? db val)
-              (assoc result k (parse-one join-expr' val))
+     (fn [result k join-expr]
+       (if-let [val (get entity k)]
+         (if-let [join-expr' (rec-join-expr k join-expr)]
+           (cond
+             (db-ref? db val)
+             (assoc result k (parse-one join-expr' val))
 
-              (coll? val)
-              (assoc result k (parse-many join-expr' val))
+             (coll? val)
+             (assoc result k (parse-many join-expr' val))
 
-              :else
-              (throw
-                (ex-info
-                  "pull map pattern must be to a lookup ref or a collection of lookup refs."
-                  {:reason            ::pull-join-not-ref
-                   ::pull-map-pattern pull-map
-                   ::entity           entity
-                   ::attribute        k
-                   ::value            val})))
+             :else
+             (throw
+              (ex-info
+               "pull map pattern must be to a lookup ref or a collection of lookup refs."
+               {:reason            ::pull-join-not-ref
+                ::pull-map-pattern pull-map
+                ::entity           entity
+                ::attribute        k
+                ::value            val})))
             ;; remove key at end of recursion
-            (dissoc result k))
+           (dissoc result k))
           ;; no value for key
-          result))
-      result pull-map)))
+         result))
+     result pull-map)))
 
 (defmethod parse-expr ::*
   [{:keys [entity]} result _]
@@ -332,9 +332,9 @@
     (when-some [lookup-ref (db-get-ref context pattern k)]
       ;; Recursively parse with a join-like context
       (parser
-        (assoc-in context [:entity k] lookup-ref)
-        result
-        {k pattern}))))
+       (assoc-in context [:entity k] lookup-ref)
+       result
+       {k pattern}))))
 
 (defn default-get-ref
   [{:keys [db]} _ lookup-ref]

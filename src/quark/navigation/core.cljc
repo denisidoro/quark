@@ -13,13 +13,13 @@
 (defn as-map-recursive
   [x]
   (walk/prewalk
-    #(if (and (not (map-entry? %))
-              (or (vector? %)
-                  (set? %)
-                  (list? %)))
-       (as-map %)
-       %)
-    x))
+   #(if (and (not (map-entry? %))
+             (or (vector? %)
+                 (set? %)
+                 (list? %)))
+      (as-map %)
+      %)
+   x))
 
 (defn navigate
   [m path]
@@ -42,16 +42,16 @@
 
     (some-fn list? set? vector?)
     (->> (map-indexed
-           (fn [idx item]
-             (path-seq* item (conj* path idx)))
-           form)
+          (fn [idx item]
+            (path-seq* item (conj* path idx)))
+          form)
          (mapcat identity))
 
     map?
     (->> (map
-           (fn [[k v]]
-             (path-seq* v (conj* path k)))
-           form)
+          (fn [[k v]]
+            (path-seq* v (conj* path k)))
+          form)
          (mapcat identity))
 
     [[form path]]))
@@ -67,10 +67,10 @@
   [path]
   (loop [p   path
          acc [path]]
-      (let [p' (pop p)]
-        (if (seq p')
-          (recur p' (conj acc p'))
-          acc))))
+    (let [p' (pop p)]
+      (if (seq p')
+        (recur p' (conj acc p'))
+        acc))))
 
 (defn paths
   [form]
