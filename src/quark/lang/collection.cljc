@@ -18,7 +18,7 @@
 
 (defn throw-exception
   [^String message]
-  (throw (#?(:clj IllegalArgumentException.
+  (throw (#?(:clj  IllegalArgumentException.
              :cljs js/Error.)
            message)))
 
@@ -165,7 +165,12 @@
   (let [f (fn [[k v]] (if (keyword? k) [(func k) v] [k v]))]
     (walk/postwalk (fn [x] (if (map? x) (into {} (map f x)) x)) m)))
 
-(defn indices [f coll] (keep-indexed #(when (f %2) %1) coll))
+(defn indices [f coll]
+  (keep-indexed #(when (f %2) %1) coll))
+
+(defn first-index
+  [f coll]
+  (first (indices f coll)))
 
 (defn deep-merge
   "Recursively merges maps.
