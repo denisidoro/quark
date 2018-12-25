@@ -1,5 +1,7 @@
 {:deps
- {cheshire                  {:mvn/version "5.8.1"}}
+ {org.clojure/clojure       {:mvn/version "1.9.0"}
+  org.clojure/clojurescript {:mvn/version "1.10.145"}
+  cheshire                  {:mvn/version "5.8.1"}}
 
  :paths
  ["src"]
