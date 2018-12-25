@@ -1,4 +1,4 @@
-(defproject denisidoro/quark "0.4.1"
+(defproject denisidoro/quark "0.5.0"
 
   :description "Clojure(Script) utility belt"
   :url "https://github.com/denisidoro/quark"
@@ -11,6 +11,7 @@
   :plugins [[lein-cloverage "1.0.13"]
             [lein-shell "0.5.0"]
             ;[lein-ancient "0.6.15"]
+            [lein-auto "0.1.3"]
             [lein-changelog "0.3.2"]]
 
   :profiles {:dev {:dependencies [[org.clojure/clojure "1.9.0"]

@@ -3,4 +3,5 @@
             [quark.conversion.data :as n]))
 
 (t/deftest edn-str->edn
-  (t/is (= (n/edn-str->edn "{:a 42}") {:a 42})))
+  (t/is (= (n/edn-str->edn "{:a 42}") {:a 42}))
+  (t/is (= (n/json->edn "{\"a\": 42}") {:a 42})))
