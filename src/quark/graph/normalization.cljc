@@ -81,7 +81,8 @@
 
   To get nested maps back out, use `pull`, which follows a pull
   pattern to recursively expand entity lookup refs."
-  (:require [quark.lang.collection :as coll]))
+  (:require [quark.collection.seq :as coll.seq]
+            [quark.collection.map :as coll.map]))
 
 (defn- possible-entity-map?
   "True if x is a non-sorted map. This check prevents errors from
@@ -95,7 +96,7 @@
   a valid entity map."
   [map id-attrs]
   (when (possible-entity-map? map)
-    (coll/seek #(contains? map %) id-attrs)))
+    (coll.seq/seek #(contains? map %) id-attrs)))
 
 (defn- get-ref
   "Returns a lookup ref for the map, given a collection of identifier
@@ -127,7 +128,7 @@
                                       {:reason     ::mixed-map-vals
                                        ::attribute k
                                        ::value     v})))
-                    (recur (coll/into! sub-entities values)
+                    (recur (coll.seq/into! sub-entities values)
                            (assoc! normalized k (into (empty v) ; preserve type
                                                       (map vector (keys v) refs)))
                            (rest kvs)))
@@ -144,8 +145,8 @@
                                     {:reason     ::mixed-collection
                                      ::attribute k
                                      ::value     v})))
-                  (recur (coll/into! sub-entities v)
-                         (assoc! normalized k (coll/like v refs))
+                  (recur (coll.seq/into! sub-entities v)
+                         (assoc! normalized k (coll.seq/like v refs))
                          (rest kvs)))
               ;; v is a collection of non-entities
               (recur sub-entities
@@ -184,7 +185,7 @@
     (persistent!
       (reduce (fn [db e]
                 (let [ref (get-ref e id-attrs)]
-                  (coll/update! db ref merge e)))
+                  (coll.seq/update! db ref merge e)))
               (transient db)
               (mapcat #(normalize-entities % id-attrs) entities)))))
 
@@ -295,7 +296,7 @@
               (assoc context :lookup-ref ref)
               {} pull-expr))
           (parse-many [join-expr refs]
-            (coll/keept #(parse-one join-expr %) refs))]
+            (coll.seq/keept #(parse-one join-expr %) refs))]
     (reduce-kv
       (fn [result k join-expr]
         (if-let [val (get entity k)]
