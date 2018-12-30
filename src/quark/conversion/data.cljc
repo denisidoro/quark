@@ -1,5 +1,5 @@
 (ns quark.conversion.data
-  (:require [quark.lang.string :as string]
+  (:require [quark.string.core :as string]
             #?@(:clj  [[cheshire.core :as json]
                        [clojure.edn :as edn]]
                 :cljs [[cljs.tools.reader :as reader]])))

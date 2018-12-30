@@ -1,4 +1,4 @@
-(ns quark.lang.string
+(ns quark.string.core
   (:require [clojure.walk :as walk]
             [clojure.string :as str]))
 
