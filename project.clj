@@ -14,7 +14,7 @@
             [lein-auto "0.1.3"]
             [lein-changelog "0.3.2"]]
 
-  :profiles {:dev {:dependencies [[org.clojure/clojure "1.9.0"]
+  :profiles {:dev {:dependencies [[org.clojure/clojure "1.10.0"]
                                   [org.clojure/clojurescript "1.10.145"]]}}
 
   :deploy-repositories [["releases" :clojars]]

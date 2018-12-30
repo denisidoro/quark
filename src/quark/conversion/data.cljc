@@ -2,17 +2,23 @@
   (:require [quark.string.core :as string]
             #?@(:clj  [[cheshire.core :as json]
                        [clojure.edn :as edn]]
-                :cljs [[cljs.tools.reader :as reader]])))
+                :cljs [[cljs.reader :as reader]])))
 
-(def readers {})
+(defn default-data-reader
+  [reader & values]
+  [(str "#" reader) (apply str values)])
+
+(def default-options
+  {:default default-data-reader})
 
 (def read-str
   #?(:cljs reader/read-string
      :clj  edn/read-string))
 
 (defn edn-str->edn
-  [edn-str]
-  (read-str edn-str))
+  ([edn-str] (edn-str->edn default-options edn-str))
+  ([options edn-str]
+   (read-str options edn-str)))
 
 (defn str->uuid
   [id-str]
