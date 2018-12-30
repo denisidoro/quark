@@ -3,8 +3,9 @@
   :description "Clojure(Script) utility belt"
   :url "https://github.com/denisidoro/quark"
 
-  :license {:name "Eclipse Public License"
-            :url  "http://www.eclipse.org/legal/epl-v10.html"}
+  :license {:name "The Apache License, Version 2.0"
+            :url "http://www.apache.org/licenses/LICENSE-2.0"
+            :distribution :repo}
 
   :dependencies [[cheshire "5.8.1"]]
 
