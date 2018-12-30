@@ -1,4 +1,4 @@
-(ns quark.collection.sequence)
+(ns quark.collection.seq)
 
 (defn find-first [pred coll] (first (filter pred coll)))
 
