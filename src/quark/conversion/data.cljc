@@ -12,7 +12,7 @@
 
 (defn edn-str->edn
   [edn-str]
-  (read-str {:readers readers} edn-str))
+  (read-str edn-str))
 
 (defn str->uuid
   [id-str]
