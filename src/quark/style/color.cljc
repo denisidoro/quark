@@ -9,6 +9,5 @@
        (partition 2)
        (map #(-> (apply str %)
                  str/lower-case
-                 nu/tap
                  (math.base/decode (math.base/alphabet 16))
                  data/str->int))))
