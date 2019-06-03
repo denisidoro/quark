@@ -6,6 +6,14 @@
   [length]
   (subs full-alphabet 0 length))
 
+(defn decode
+  [s alphabet]
+  (reduce
+    (fn [val c]
+      (+ (* (count alphabet) val) (.indexOf alphabet (str c))))
+    0
+    (str s)))
+
 (defn encode
   [i alphabet]
   (reduce
@@ -19,11 +27,3 @@
             (let [x (count alphabet)]
               [(quot i x) (mod i x)]))
           [i 0])))))
-
-(defn decode
-  [s alphabet]
-  (reduce
-    (fn [val c]
-      (+ (* (count alphabet) val) (.indexOf alphabet (str c))))
-    0
-    (str s)))

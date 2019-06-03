@@ -1,5 +1,5 @@
 (ns quark.style.color
-  (:require [quark.math.core :as math]
+  (:require [quark.math.base :as math.base]
             [quark.conversion.data :as data]))
 
 (defn hex->rgb
@@ -7,5 +7,5 @@
   (->> (subs hex 1)
        (partition 2)
        (map #(-> (apply str %)
-                 (math/to-radix 16 10)
+                 (math.base/encode (math.base/alphabet 16))
                  data/str->int))))
