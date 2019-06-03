@@ -7,5 +7,5 @@
   (->> (subs hex 1)
        (partition 2)
        (map #(-> (apply str %)
-                 (math.base/encode (math.base/alphabet 16))
+                 (math.base/decode (math.base/alphabet 16))
                  data/str->int))))
