@@ -1,11 +1,14 @@
 (ns quark.style.color
   (:require [quark.math.base :as math.base]
-            [quark.conversion.data :as data]))
+            [quark.conversion.data :as data]
+            [clojure.string :as str]))
 
 (defn hex->rgb
   [hex]
   (->> (subs hex 1)
        (partition 2)
        (map #(-> (apply str %)
+                 str/lower-case
+                 nu/tap
                  (math.base/decode (math.base/alphabet 16))
                  data/str->int))))
