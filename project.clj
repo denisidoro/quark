@@ -1,4 +1,4 @@
-(defproject denisidoro/quark "0.6.0"
+(defproject denisidoro/quark "0.7.0"
 
   :description "Clojure(Script) utility belt"
   :url "https://github.com/denisidoro/quark"
