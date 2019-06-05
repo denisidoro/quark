@@ -90,3 +90,11 @@
   (if (map? m)
     (recur ((-> m keys first) m))
     m))
+
+(defn set-by
+  [f xs]
+  (->> xs
+       (sort-by f)
+       (partition-by f)
+       (map first)
+       set))
