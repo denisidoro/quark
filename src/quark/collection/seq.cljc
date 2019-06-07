@@ -1,4 +1,5 @@
-(ns quark.collection.seq)
+(ns quark.collection.seq
+  (:require [clojure.set :as set]))
 
 (defn find-first
   [pred coll]
@@ -24,12 +25,17 @@
         (replace {existing-group extended-group} groups))
       (conj groups [k [v]]))))
 
-(defn vec-group-by [f input]
-  (reduce (fn [acc x] (add (f x) x acc)) [] input))
+(defn vec-group-by
+  [f input]
+  (reduce
+    (fn [acc x] (add (f x) x acc))
+    []
+    input))
 
 (defn vec-remove
   [v pos]
-  (into (subvec v 0 pos) (subvec v (inc pos))))
+  (into (subvec v 0 pos)
+        (subvec v (inc pos))))
 
 (defn max-by
   "Returns the x for which (k x), *not necessarily a number*, is greatest, according to `compare`."
@@ -131,3 +137,4 @@
       (into sets (map #(conj % x)) sets))
     #{#{}}
     coll))
+
