@@ -1,7 +1,6 @@
 ;; based on https://eddmann.com/posts/binary-search-trees-in-clojure/
 (ns quark.tree.core
-  (:refer-clojure :exclude [remove min max contains? count])
-  (:import (java.io Writer)))
+  (:refer-clojure :exclude [remove min max contains? count]))
 
 (defprotocol Node
   (neighbors [this])
