@@ -1,5 +1,5 @@
 (ns quark.tree.search-test
-  (:require [#?(:clj clojure.test :cljs cljs.test) :as t]
+  (:require [clojure.test :as t]
             [quark.tree.bst :as bst]
             [quark.tree.search :as search]))
 
@@ -13,4 +13,3 @@
 
 (t/deftest breadth-first-search
   (t/is (= [1 2 3 4 5 6 7 8] (search/breadth-first-search node))))
-(t/run-tests)
