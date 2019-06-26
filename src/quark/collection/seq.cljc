@@ -1,30 +1,41 @@
-(ns quark.collection.seq)
+(ns quark.collection.seq
+  (:require [clojure.set :as set]))
 
-(defn find-first [pred coll] (first (filter pred coll)))
+(defn find-first
+  [pred coll]
+  (first (filter pred coll)))
 
-(defn indices [f coll]
+(defn indices
+  [f coll]
   (keep-indexed #(when (f %2) %1) coll))
 
 (defn first-index
   [f coll]
   (first (indices f coll)))
 
-(defn ^:private match-key [k [group-key _]] (= k group-key))
+(defn ^:private match-key?
+  [k [group-key _]]
+  (= k group-key))
 
 (defn ^:private add [k v groups]
-  (let [existing-group (find-first #(match-key k %) groups)]
+  (let [existing-group (find-first #(match-key? k %) groups)]
     (if existing-group
       (let [[k existing-elts] existing-group
             extended-group [k (conj existing-elts v)]]
         (replace {existing-group extended-group} groups))
       (conj groups [k [v]]))))
 
-(defn vec-group-by [f input]
-  (reduce (fn [acc x] (add (f x) x acc)) [] input))
+(defn vec-group-by
+  [f input]
+  (reduce
+    (fn [acc x] (add (f x) x acc))
+    []
+    input))
 
 (defn vec-remove
   [v pos]
-  (into (subvec v 0 pos) (subvec v (inc pos))))
+  (into (subvec v 0 pos)
+        (subvec v (inc pos))))
 
 (defn max-by
   "Returns the x for which (k x), *not necessarily a number*, is greatest, according to `compare`."
@@ -90,3 +101,40 @@
   (if (map? m)
     (recur ((-> m keys first) m))
     m))
+
+(defn set-by
+  [f xs]
+  (->> xs
+       (sort-by f)
+       (partition-by f)
+       (map first)
+       set))
+
+(defn swap
+  [coll index another-index]
+  (assoc coll
+    another-index (coll index)
+    index (coll another-index)))
+
+(defn ^:private subvecs-with-length
+  [coll length]
+  (->> (-> coll count (- length) inc)
+       (range 0)
+       (map #(subvec coll % (+ % length)))
+       set))
+
+(defn subvecs
+  [coll]
+  (->> (range 0 (-> coll count inc))
+       (map #(subvecs-with-length coll %))
+       (reduce into)
+       set))
+
+(defn powerset
+  [coll]
+  (reduce
+    (fn [sets x]
+      (into sets (map #(conj % x)) sets))
+    #{#{}}
+    coll))
+
