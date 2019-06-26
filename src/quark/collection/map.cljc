@@ -1,5 +1,6 @@
 (ns quark.collection.map
-  (:require [clojure.walk :as walk]))
+  (:require [clojure.walk :as walk]
+            [clojure.string :as str]))
 
 (defn find-first [pred coll] (first (filter pred coll)))
 
@@ -103,3 +104,37 @@
   (if (map? m)
     (recur ((-> m keys first) m))
     m))
+
+(defn get-by-substr
+  [body substr]
+  (some->> body
+           (filter-keys #(str/includes? % substr))
+           vals
+           first))
+
+(defn get-in-by-substr
+  [body path]
+  (reduce (fn [b p] (get-by-substr b p)) body path))
+
+(defn fill
+  ([map-interpolation-fn m ks]
+   (fill map-interpolation-fn identity identity m ks))
+  ([map-interpolation-fn x-serialize-fn x-unserialize-fn m ks]
+   (let [adapt? (and x-serialize-fn (not (= identity x-serialize-fn)))
+         num-m  (if adapt?
+                  (into (sorted-map) (map-keys x-serialize-fn m))
+                  m)
+         num-ks (if adapt?
+                  (map x-serialize-fn ks)
+                  ks)
+         result (->> num-ks
+                     (reduce (fn [m x]
+                               (if (get m x)
+                                 m
+                                 (assoc m x (map-interpolation-fn m x))))
+                             num-m))]
+     (if adapt?
+       (->> result
+            (map-keys x-unserialize-fn)
+            (into (sorted-map)))
+       result))))

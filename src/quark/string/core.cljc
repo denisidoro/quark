@@ -34,3 +34,10 @@
   (cond (string? s) s
         (keyword? s) (name s)
         :else (str s)))
+
+;; http://www.matt-reid.co.uk/blog_post.php?id=69
+(defn normalize
+  [txt]
+  (-> txt
+      (java.text.Normalizer/normalize java.text.Normalizer$Form/NFD)
+      (str/replace #"\p{InCombiningDiacriticalMarks}+" "")))

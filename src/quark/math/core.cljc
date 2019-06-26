@@ -13,3 +13,8 @@
       (recur (conj result (rem n 10))
              (quot n 10))
       result)))
+
+(defn log
+  [base x]
+  (/ (Math/log x)
+     (Math/log base)))

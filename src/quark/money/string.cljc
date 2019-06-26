@@ -1,6 +1,5 @@
 (ns quark.money.string
-  (:require [clojure.string :as str]
-            #?@(:cljs [[goog.string :as gstr]])))
+  (:require #?@(:cljs [[goog.string :as gstr]])))
 
 (defn ^:private bigdec->str
   [x]
