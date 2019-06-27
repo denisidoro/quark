@@ -1,7 +1,7 @@
 (ns quark.math.curve
   (:require [quark.math.point :as point]
             [quark.collection.map :as map]
-            [quark.math.core :as math]))
+            [quark.math.interpolation :as math.interpolation]))
 
 (defn mcurve
   [curve]
@@ -52,7 +52,7 @@
                              (-> partitions last first)])
             y0 (get m x0)
             y1 (get m x1)]
-        (math/linear-interpolation x0 y0 x1 y1 x)))))
+        (math.interpolation/linear-interpolation x0 y0 x1 y1 x)))))
 
 (def ^:private default-opts
   {:interpolator linear-interpolate})
