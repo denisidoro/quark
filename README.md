@@ -13,13 +13,19 @@ Quarks combine to form composite particles.
 
 ### Alternatives
 
-- [alexandergunnarson/quantum](https://github.com/alexandergunnarson/quantum/blob/master/README.md)
+- [alexandergunnarson/quantum](https://github.com/alexandergunnarson/quantum)
 - [Prismatic/plumbing](https://github.com/Prismatic/plumbing)
 - [weavejester/medley](https://github.com/weavejester/medley)
 - [mikera/clojure-utils](https://github.com/mikera/clojure-utils)
 - [ptaoussanis/encore](https://github.com/ptaoussanis/encore)
 - [ztellman/potemkin](https://github.com/ztellman/potemkin)
 - [zcaudate/hara](https://github.com/zcaudate/hara)
+
+### Minimal dependencies
+
+```bash
+./scripts/require
+```
 
 ### Credits
 

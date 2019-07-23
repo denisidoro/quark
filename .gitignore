@@ -9,6 +9,5 @@ pom.xml.asc
 /.nrepl-port
 /.idea
 /*.iml
-/src/quark/error
 /cljs-test-runner-out
 /.cpcache
