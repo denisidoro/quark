@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && cd .. && pwd)"
+
+read_project() {
+  cat "${ROOT}/project.clj"
+}
+
+dependencies() {
+   read_project \
+    | tr '\n' ' ' \
+    | grep -Eo ':dependencies.*?\]\]' \
+    | grep -Eo '\[[^;]*? ' \
+    | tr -d '[' \
+    | grep -v 'org.clojure' \
+    | sort -u \
+    | tr '\n' ' ' \
+    | xargs
+}
+
+base() {
+  read_project \
+    | head -n1 \
+    | sed 's/(defproject //'
+}
+
+echo "[$(base) :exclusions [$(dependencies)]]"

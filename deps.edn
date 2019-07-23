@@ -1,4 +1,5 @@
 {:deps
+ ;; TODO: add all dependencies from project.clj
  {cheshire                  {:mvn/version "5.8.1"}}
 
  :paths
