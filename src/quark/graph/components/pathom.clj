@@ -36,9 +36,13 @@
 
   p.pathom/Pathom
   (query
-    [{:keys [parser]} eql]
+    [this eql]
+    (p.pathom/query this eql {}))
+
+  (query
+    [{:keys [parser]} eql options]
     (async/<!!
-     (parser {} eql)))
+      (parser options eql)))
 
   Object
   (toString

@@ -3,7 +3,7 @@
             [schema.core :as s]))
 
 (defprotocol Pathom
-  (query [component eql]))
+  (query [component eql] [component eql options]))
 
 (s/defschema IPathom
   (s/protocol Pathom))
